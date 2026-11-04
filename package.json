@@ -8,13 +8,15 @@
         "build": "vite build",
         "preview": "vite preview --host",
         "test": "vitest run",
-        "test:watch": "vitest"
+        "test:watch": "vitest",
+        "deploy": "vite build && gh-pages -d dist"
     },
     "dependencies": {
         "vite": "^5.4.10",
         "vite-plugin-pwa": "^0.20.5"
     },
     "devDependencies": {
+        "gh-pages": "^6.0.2",
         "jsdom": "^25.0.1",
         "vitest": "^2.1.8"
     }
