@@ -12,6 +12,16 @@ TileFlow is a mobile-friendly number-merging puzzle inspired by classic merging 
 - Theme toggle, sound toggle, help/settings panel
 - Progressive Web App support with offline cache
 
+## Install on a phone
+
+TileFlow is a Progressive Web App, so it can be installed from its browser without an app store. Open the live game on your phone and tap **Install app**. On iPhone, open the page in Safari, tap **Share**, then choose **Add to Home Screen**. After the first load, the game can also run offline.
+
+Regenerate the PWA icons after changing the app mark with:
+
+```bash
+npm run icons
+```
+
 ## Local development
 
 ```bash

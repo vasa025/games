@@ -47,17 +47,23 @@ export class TileFlowGame {
         this.settings.bestScore = this.state.bestScore;
         this.touchStart = null;
         this.audioContext = null;
+        this.installPrompt = null;
+        this.installHelpOpen = false;
 
         this.handleKey = this.handleKey.bind(this);
         this.handleResize = this.handleResize.bind(this);
         this.handleRootClick = this.handleRootClick.bind(this);
         this.handleTouchStart = this.handleTouchStart.bind(this);
         this.handleTouchEnd = this.handleTouchEnd.bind(this);
+        this.handleBeforeInstallPrompt = this.handleBeforeInstallPrompt.bind(this);
+        this.handleAppInstalled = this.handleAppInstalled.bind(this);
     }
 
     init() {
         document.addEventListener('keydown', this.handleKey);
         window.addEventListener('resize', this.handleResize);
+        window.addEventListener('beforeinstallprompt', this.handleBeforeInstallPrompt);
+        window.addEventListener('appinstalled', this.handleAppInstalled);
         this.root.addEventListener('click', this.handleRootClick);
         this.root.addEventListener('touchstart', this.handleTouchStart, { passive: true });
         this.root.addEventListener('touchend', this.handleTouchEnd, { passive: true });
@@ -69,9 +75,39 @@ export class TileFlowGame {
     destroy() {
         document.removeEventListener('keydown', this.handleKey);
         window.removeEventListener('resize', this.handleResize);
+        window.removeEventListener('beforeinstallprompt', this.handleBeforeInstallPrompt);
+        window.removeEventListener('appinstalled', this.handleAppInstalled);
         this.root.removeEventListener('click', this.handleRootClick);
         this.root.removeEventListener('touchstart', this.handleTouchStart);
         this.root.removeEventListener('touchend', this.handleTouchEnd);
+    }
+
+    handleBeforeInstallPrompt(event) {
+        event.preventDefault();
+        this.installPrompt = event;
+        this.installHelpOpen = false;
+        this.render();
+    }
+
+    handleAppInstalled() {
+        this.installPrompt = null;
+        this.installHelpOpen = false;
+        this.render();
+    }
+
+    isInstalled() {
+        return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    }
+
+    getInstallHelp() {
+        const userAgent = navigator.userAgent || '';
+        if (/iPhone|iPad|iPod/i.test(userAgent)) {
+            return 'In Safari, tap Share, then choose Add to Home Screen.';
+        }
+        if (/Android/i.test(userAgent)) {
+            return 'Open your browser menu and choose Install app or Add to Home screen.';
+        }
+        return 'Open your browser menu and choose Install app or Create shortcut. On iPhone, open this page in Safari and choose Add to Home Screen from Share.';
     }
 
     getStatusLabel() {
@@ -170,6 +206,19 @@ export class TileFlowGame {
             this.settings.settingsOpen = !this.settings.settingsOpen;
             saveSettings(this.settings);
             this.render();
+            return;
+        }
+
+        if (action === 'install-app') {
+            if (this.installPrompt) {
+                const prompt = this.installPrompt;
+                this.installPrompt = null;
+                prompt.prompt();
+                prompt.userChoice.then(() => this.render(), () => this.render());
+            } else {
+                this.installHelpOpen = !this.installHelpOpen;
+                this.render();
+            }
             return;
         }
 
@@ -356,7 +405,9 @@ export class TileFlowGame {
             <button type="button" class="primary-button" data-action="new-game">New game</button>
             <button type="button" class="secondary-button" data-action="daily-game">Daily</button>
             <button type="button" class="secondary-button" data-action="undo" ${this.state.history.length ? '' : 'disabled'}>Undo</button>
+            ${this.isInstalled() ? '' : `<button type="button" class="secondary-button" data-action="install-app">Install app</button>`}
           </section>
+          ${this.installHelpOpen ? `<p class="install-help" role="status">${this.getInstallHelp()}</p>` : ''}
 
           <div class="board-shell">
             <div class="game-board" role="grid" aria-label="TileFlow board" aria-live="polite">

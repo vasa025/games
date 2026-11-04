@@ -6,7 +6,7 @@ export default defineConfig({
     plugins: [
         VitePWA({
             registerType: 'autoUpdate',
-            includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
+            includeAssets: ['favicon.svg', 'tileflow-icon-192.png', 'tileflow-icon-512.png'],
             manifest: {
                 name: 'TileFlow',
                 short_name: 'TileFlow',
@@ -15,16 +15,20 @@ export default defineConfig({
                 background_color: '#121826',
                 display: 'standalone',
                 orientation: 'portrait',
+                start_url: './',
+                scope: './',
                 icons: [
                     {
-                        src: '/tileflow-icon-192.png',
+                        src: './tileflow-icon-192.png',
                         sizes: '192x192',
-                        type: 'image/png'
+                        type: 'image/png',
+                        purpose: 'any'
                     },
                     {
-                        src: '/tileflow-icon-512.png',
+                        src: './tileflow-icon-512.png',
                         sizes: '512x512',
-                        type: 'image/png'
+                        type: 'image/png',
+                        purpose: 'any maskable'
                     }
                 ]
             },

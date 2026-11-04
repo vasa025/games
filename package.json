@@ -9,6 +9,7 @@
         "preview": "vite preview --host",
         "test": "vitest run",
         "test:watch": "vitest",
+        "icons": "node scripts/generate-icons.js",
         "deploy": "vite build && gh-pages -d dist"
     },
     "dependencies": {
