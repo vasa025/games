@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="TileFlow">
+    <defs>
+        <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0%" stop-color="#8b5cf6"/>
+            <stop offset="100%" stop-color="#22d3ee"/>
+        </linearGradient>
+    </defs>
+    <rect width="128" height="128" rx="24" fill="#0f172a"/>
+    <rect x="16" y="16" width="96" height="96" rx="24" fill="url(#g)" opacity="0.93"/>
+    <path d="M39 86V42h17l15 19 15-19h17v44H86V62L68 82 50 62v24H39z" fill="#f8fafc"/>
+</svg>
